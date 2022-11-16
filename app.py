@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
 
-from auth.auth import AuthError, requires_auth
+from auth import AuthError, requires_auth
 
 from datetime import datetime
 
@@ -35,7 +35,7 @@ def create_app(test_config=None):
         return greeting
     
     @app.route('/movies', methods=['GET'])
-    @requires_auth('view:movies')
+    @requires_auth('get:movies')
     def retrieve_movies(payload):
         movies = Movie.query.all()
         return jsonify({
