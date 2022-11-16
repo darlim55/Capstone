@@ -36,7 +36,7 @@ def create_app(test_config=None):
     
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
-    def retrieve_movies(payload):
+    def retrieve_movies():
         movies = Movie.query.all()
         return jsonify({
             "success": True,
@@ -46,7 +46,7 @@ def create_app(test_config=None):
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def retrieve_actors(payload):
+    def retrieve_actors():
         actors = Actor.query.all()
         return jsonify({
             "success": True,
