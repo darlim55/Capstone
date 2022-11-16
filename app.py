@@ -28,6 +28,12 @@ def create_app(test_config=None):
         return response
 
 
+
+    @app.route('/')
+    def get_greeting():
+        greeting = "Welcome to Agency! You can get JWT here." 
+        return greeting
+    
     '''@requires_auth('view:movies')'''
     @app.route('/movies', methods=['GET'])
     def retrieve_movies():
