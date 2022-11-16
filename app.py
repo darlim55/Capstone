@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
 
-'''from auth.auth import AuthError, requires_auth'''
+from auth.auth import AuthError, requires_auth
 
 from datetime import datetime
 
@@ -34,8 +34,8 @@ def create_app(test_config=None):
         greeting = "Welcome to Agency! You can get JWT here." 
         return greeting
     
-    '''@requires_auth('view:movies')'''
     @app.route('/movies', methods=['GET'])
+    @requires_auth('view:movies')
     def retrieve_movies():
         movies = Movie.query.all()
         return jsonify({
@@ -44,8 +44,8 @@ def create_app(test_config=None):
         })
 
 
-    '''@requires_auth('view:actors')'''
     @app.route('/actors', methods=['GET'])
+    @requires_auth('get:actors')
     def retrieve_actors():
         actors = Actor.query.all()
         return jsonify({
