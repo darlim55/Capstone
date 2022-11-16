@@ -36,7 +36,8 @@ def create_app(test_config=None):
         return greeting
     
     @app.route('/movies', methods=['GET'])
-    def retrieve_movies():
+    @requires_auth('get:movies')
+    def retrieve_movies(jwt):
         movies = Movie.query.all()
         return jsonify({
             "success": True,
@@ -57,6 +58,7 @@ def create_app(test_config=None):
         
     '''@requires_auth('post:movies')   '''
     @app.route('/movies', methods=['POST'])
+    @requires_auth('post:movies')
     def create_movie():
         body = request.get_json()
 
@@ -79,10 +81,9 @@ def create_app(test_config=None):
         })
 
 
-
-    '''@requires_auth('post:actors')'''
     @app.route('/actors', methods=['POST'])
-    def create_actor():
+    @requires_auth('post:actors')
+    def create_actor(jwt):
         body = request.get_json()
 
         if body is None:
@@ -110,9 +111,9 @@ def create_app(test_config=None):
 
    
     
-    '''@requires_auth('delete:movies')'''
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-    def delete_movie(movie_id):
+    @requires_auth('delete:movies')
+    def delete_movie(jwt,movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
 
         if movie is None:
@@ -127,9 +128,9 @@ def create_app(test_config=None):
 
 
     
-    '''@requires_auth('delete:actors')    '''
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-    def delete_actor(actor_id):
+    @requires_auth('delete:actors')
+    def delete_actor(jwt,actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
 
         if actor is None:
@@ -143,9 +144,9 @@ def create_app(test_config=None):
         })
 
 
-    '''@requires_auth('update:movies') '''
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-    def update_movie(movie_id):
+    @requires_auth('patch:movies')
+    def update_movie(jwt,movie_id):
 
         updated_movie = Movie.query.get(movie_id)
 
@@ -176,7 +177,8 @@ def create_app(test_config=None):
  
     '''@requires_auth('update:actors')'''
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-    def update_actor(actor_id):
+    @requires_auth('patch:actors')
+    def update_actor(jwt,actor_id):
 
         updated_actor = Actor.query.get(actor_id)
 
@@ -246,15 +248,16 @@ def create_app(test_config=None):
             "error": 400,
             "message": get_error_message(error, "bad request")
         }), 400
-
-    '''@app.errorhandler(AuthError)
-    def auth_error(auth_error):
+        
+    @app.errorhandler(AuthError)
+    def auth_error(error):
         return jsonify({
-            "success": False,
-            "error": auth_error.status_code,
-            "message": auth_error.error['description']
-        }), auth_error.status_code'''
+            'success': False,
+            'error': error.status_code,
+            'message': error.error['description']
+        }), error.status_code
 
+    
     return app
 
 
