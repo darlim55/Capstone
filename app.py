@@ -46,7 +46,7 @@ def create_app(test_config=None):
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def retrieve_actors():
+    def retrieve_actors(jwt):
         actors = Actor.query.all()
         return jsonify({
             "success": True,
