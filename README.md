@@ -76,12 +76,15 @@ https://github.com/darlim55/Capstone
 7. psql -U postgres capstone < capstone.psql
 
 **Generation and tokens**
+* Login:
+1. https://dev-28uw5pep3hq5ayej.us.auth0.com/authorize?audience=http://localhost:5000&response_type=token&client_id=3IJxQPbEfyHnbp5Tb2LGN30FKyk1bM7V&redirect_uri=https://darlim-teste.herokuapp.com
+
 
 * Emails:
 1. assistest_teste@udacity.com
 2. director_teste@udacity.com
 3. productor_teste@udacity.com
 
-*Password:
+* Password:
 1. Udacity!
 
