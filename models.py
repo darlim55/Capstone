@@ -32,7 +32,6 @@ def setup_db(app, database_path=database_path):
 Movie
 '''
 
-
 class Movie(db.Model):
 
     __tablename__ = 'movies'

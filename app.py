@@ -3,7 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
-
+import psycopg2
 from auth import AuthError, requires_auth
 
 from datetime import datetime
@@ -13,8 +13,6 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
     setup_db(app)
-
-
     CORS(app)
 
     # CORS Headers
@@ -35,31 +33,33 @@ def create_app(test_config=None):
         greeting = "Welcome to Agency! You can get JWT here." 
         return greeting
     
-    @app.route('/movies', methods=['GET'])
-    @requires_auth('get:movies')
-    def retrieve_movies():
+    @app.route('/movie', methods=['GET'])
+    @requires_auth('get:movie')
+    def retrieve_movies(payload):
         movies = Movie.query.all()
         return jsonify({
             "success": True,
             "movies": [movie.format() for movie in movies]
         })
-
+     
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def retrieve_actors():
+    def retrieve_actors(payload):
+    
         actors = Actor.query.all()
         return jsonify({
             "success": True,
             "actors": [actor.format() for actor in actors]
         })
-        
+       
+
         
         
     '''@requires_auth('post:movies')   '''
     @app.route('/movies', methods=['POST'])
-    @requires_auth('post:movies')
-    def create_movie():
+    @requires_auth('post: movies')
+    def create_movie(jwt):
         body = request.get_json()
 
         if body is None:
@@ -82,7 +82,7 @@ def create_app(test_config=None):
 
 
     @app.route('/actors', methods=['POST'])
-    @requires_auth('post:actors')
+    @requires_auth('post: actors')
     def create_actor(jwt):
         body = request.get_json()
 
@@ -129,7 +129,7 @@ def create_app(test_config=None):
 
     
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-    @requires_auth('delete:actors')
+    @requires_auth('delete: actors')
     def delete_actor(jwt,actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
 
@@ -264,4 +264,4 @@ def create_app(test_config=None):
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8100, debug=True)
+    app.run(host='127.0.0.1', port=8100, debug=True)
